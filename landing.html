@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto Atendimento Kikos</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+
+    :root {
+      --vermelho: #e52322;
+      --preto: #0a0a0a;
+      --cinza-escuro: #111111;
+      --branco: #ffffff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--preto);
+      color: var(--branco);
+      font-family: 'Inter', Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ─────────────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 60px;
+  background: rgba(10,10,10,0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.08), 0 8px 32px rgba(0,0,0,0.5);
+}
+
+    nav img { height: 48px; }
+    .nav-btn {
+      background-color: var(--vermelho);
+      color: var(--branco);
+      border: none;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .nav-btn:hover { opacity: 0.85; }
+
+    /* ── HERO ─────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 140px 40px 120px;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('mock1.png');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.2;
+      filter: grayscale(30%);
+      will-change: transform;
+    }
+    .hero-gradiente {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 30%, rgba(229,35,34,0.15) 0%, transparent 55%),
+        linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.0) 40%, rgba(0,0,0,0.85) 100%);
+    }
+    .hero-conteudo {
+      position: relative;
+      z-index: 1;
+      max-width: 920px;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--vermelho);
+      border: 1px solid rgba(229,35,34,0.5);
+      padding: 6px 18px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.3s;
+    }
+    .hero-titulo {
+  font-size: clamp(28px, 3.6vw, 52px);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.5s;
+}
+    .hero-titulo em { font-style: italic; color: var(--vermelho); }
+    .hero-subtitulo {
+      font-size: clamp(16px, 2vw, 20px);
+      color: #999;
+      line-height: 1.7;
+      max-width: 560px;
+      margin: 0 auto 48px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.7s;
+    }
+
+    .destaque-subtitulo {
+  font-style: normal;
+  color: var(--branco);
+  font-weight: 700;
+  }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.9s;
+    }
+    .btn-primario {
+      background-color: var(--vermelho);
+      color: var(--branco);
+      border: none;
+      padding: 18px 44px;
+      border-radius: 8px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 32px rgba(229,35,34,0.45);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primario:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(229,35,34,0.55); }
+    .btn-outline {
+      background: transparent;
+      color: var(--branco);
+      border: 1px solid #444;
+      padding: 18px 44px;
+      border-radius: 8px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s;
+    }
+    .btn-outline:hover { border-color: #888; }
+
+    /* scroll indicator */
+    .hero-scroll {
+  position: absolute;
+  bottom: 44px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 1.2s;
+  z-index: 2;
+}
+    .hero-scroll span {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #555;
+    }
+    .scroll-chevron {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      animation: bounce 2s ease infinite;
+    }
+    .scroll-chevron svg { opacity: 0.5; }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    /* ── DIVISOR ──────────────────────────────────────── */
+    .divisor { width: 100%; height: 1px; background: linear-gradient(to right, transparent, #222, transparent); }
+
+    /* ── MOCKUP DUPLO ─────────────────────────────────── */
+    .mockup-duplo {
+  padding: 100px 60px;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 60px;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.mockup-duplo::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: -200px;
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(229,35,34,0.45) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mockup-duplo::after {
+  content: '';
+  position: absolute;
+  bottom: -200px;
+  right: -200px;
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(229,35,34,0.35) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+    .mockup-duplo.invertido .mockup-duplo-texto { order: 2; }
+    .mockup-duplo.invertido .mockup-duplo-imagem { order: 1; }
+    .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--vermelho);
+      margin-bottom: 16px;
+      display: block;
+    }
+    .mockup-duplo-texto h2 {
+      font-size: clamp(28px, 3.5vw, 48px);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .mockup-duplo-texto p.desc {
+      font-size: 17px;
+      color: #666;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+    .frame-9-16 {
+      width: 100%;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 5px solid #222;
+      box-shadow: 0 0 0 1px #333, 0 40px 80px rgba(0,0,0,0.5), 0 0 60px rgba(229,35,34,0.1);
+    }
+    .frame-9-16 img { width: 100%; display: block; }
+
+    .mockup-duplo-texto {
+  position: relative;
+  z-index: 1;
+}
+
+.mockup-duplo-imagem {
+  position: relative;
+  z-index: 1;
+}
+
+    /* ── FEATURES COM FUNDO ───────────────────────────── */
+    .features-wrapper {
+      position: relative;
+      overflow: hidden;
+    }
+    .features-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('mock1.png');
+      background-size: cover;
+      background-position: center 30%;
+      opacity: 0.06;
+      filter: grayscale(50%);
+    }
+    .features-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, var(--preto) 0%, transparent 20%, transparent 80%, var(--preto) 100%);
+    }
+    .features {
+      padding: 100px 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .features-header { margin-bottom: 60px; }
+    .titulo-secao {
+      font-size: clamp(28px, 3.5vw, 48px);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .desc-secao { font-size: 17px; color: #666; line-height: 1.7; max-width: 500px; }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: #1a1a1a;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #222;
+    }
+    .feature-card {
+  background: var(--branco);
+  padding: 36px 32px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease, background 0.2s, box-shadow 0.2s;
+}
+.feature-card:hover {
+  background: #f0f0f0;
+  box-shadow: inset 0 0 0 2px var(--vermelho);
+}
+.feature-card.visivel { opacity: 1; transform: translateY(0); }
+.feature-icone { width: 40px; height: 40px; margin-bottom: 20px; color: var(--vermelho); }
+.feature-titulo { font-size: 17px; font-weight: 700; margin-bottom: 10px; color: var(--preto); }
+.feature-texto { font-size: 14px; color: #444; line-height: 1.6; }
+
+    /* ── PAINEL 3D ────────────────────────────────────── */
+    .painel-3d-section {
+  padding: 100px 60px;
+  overflow: hidden;
+  position: relative;
+}
+
+.painel-3d-section::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -300px;
+  transform: translateY(-50%);
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(229,35,34,0.3) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.painel-3d-section::after {
+  content: '';
+  position: absolute;
+  bottom: -100px;
+  right: -100px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(229,35,34,0.2) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+    .painel-3d-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .painel-3d-texto .label { margin-bottom: 16px; }
+    .painel-3d-texto h2 {
+      font-size: clamp(26px, 3vw, 44px);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .painel-3d-texto p {
+      font-size: 16px;
+      color: #666;
+      line-height: 1.7;
+      margin-bottom: 16px;
+      position: relative;
+  z-index: 1;
+    }
+
+    .painel-3d-imagem.visivel {
+      opacity: 1;
+      transform: perspective(1000px) rotateY(-8deg) rotateX(3deg) translateX(0);
+    }
+    .painel-3d-imagem::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to left, transparent 40%, rgba(10,10,10,0.7) 100%);
+  border-radius: 12px;
+  pointer-events: none;
+}
+    .frame-16-9 {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 3px solid #2a2a2a;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6), 20px 20px 60px rgba(229,35,34,0.08), -10px -10px 40px rgba(0,0,0,0.3);
+    }
+    .frame-16-9 img { width: 100%; display: block; }
+
+    /* ── COMO FUNCIONA ────────────────────────────────────── */
+.como-funciona {
+  position: relative;
+  padding: 120px 60px;
+  overflow: hidden;
+}
+
+.como-funciona-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('mock1.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.08;
+  filter: grayscale(40%);
+  will-change: transform;
+}
+
+.como-funciona-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(229,35,34,0.35) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 50%, rgba(229,35,34,0.25) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 0%, rgba(229,35,34,0.2) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 100%, rgba(229,35,34,0.2) 0%, transparent 40%),
+    linear-gradient(to bottom, var(--preto) 0%, rgba(10,10,10,0.7) 50%, var(--preto) 100%);
+}
+
+.como-funciona-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.como-funciona-header {
+  margin-bottom: 80px;
+}
+
+.como-funciona-desc {
+  font-size: 17px;
+  color: #666;
+  margin-top: 12px;
+}
+
+/* Timeline */
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  position: relative;
+}
+
+.timeline-linha {
+  position: absolute;
+  top: 28px;
+  left: calc(12.5% - 1px);
+  right: calc(12.5% - 1px);
+  height: 2px;
+  background: linear-gradient(to right, var(--vermelho), rgba(229,35,34,0.2));
+  z-index: 0;
+}
+
+.timeline-card {
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.timeline-card.visivel {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.timeline-num {
+  width: 56px;
+  height: 56px;
+  background: var(--vermelho);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 900;
+  margin-bottom: 24px;
+  box-shadow: 0 0 0 6px rgba(229,35,34,0.15), 0 0 30px rgba(229,35,34,0.4);
+}
+
+.timeline-img {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 3px solid #2a2a2a;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(229,35,34,0.1);
+  margin-bottom: 20px;
+}
+
+.timeline-img img {
+  width: 100%;
+  display: block;
+}
+
+.timeline-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--vermelho);
+  margin-bottom: 8px;
+}
+
+.timeline-titulo {
+  font-size: clamp(16px, 1.4vw, 20px);
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.timeline-desc {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.7;
+}
+
+    /* ── CTA FINAL COM FUNDO ──────────────────────────── */
+    .cta-final {
+      position: relative;
+      padding: 160px 60px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .cta-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('mock1.png');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.1;
+      filter: grayscale(40%);
+    }
+    .cta-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 50%, rgba(229,35,34,0.12) 0%, transparent 60%),
+        linear-gradient(to bottom, var(--preto) 0%, transparent 30%, transparent 70%, var(--preto) 100%);
+    }
+    .cta-final h2 {
+      font-size: clamp(32px, 4.5vw, 64px);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .cta-final p {
+      font-size: 18px;
+      color: #666;
+      margin-bottom: 48px;
+      position: relative;
+      z-index: 1;
+    }
+    .cta-final a { position: relative; z-index: 1; }
+
+    .titulo-destaque {
+  font-style: italic;
+  color: var(--vermelho);
+}
+
+.mockup-duplo-imagem::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle, rgba(232, 21, 21, 0.35) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 50%;
+}
+
+.mockup-duplo-imagem .frame-9-16 {
+  position: relative;
+  z-index: 1;
+}
+
+.feature-card-vermelho {
+  background: var(--vermelho) !important;
+}
+
+.feature-card-vermelho .feature-icone {
+  color: var(--branco);
+}
+
+.feature-card-vermelho .feature-titulo {
+  color: var(--branco);
+}
+
+.feature-card-vermelho .feature-texto {
+  color: rgba(255,255,255,0.75);
+}
+
+.feature-card-vermelho:hover {
+  background: #cc1f1e !important;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.3);
+}
+
+.painel-3d-wrapper {
+  position: relative;
+}
+
+.painel-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle, rgba(229,35,34,0.6) 0%, rgba(229,35,34,0.2) 40%, transparent 70%);
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(30px);
+  z-index: 0;
+}
+
+.painel-3d-imagem {
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  transform: perspective(1000px) rotateY(-8deg) rotateX(3deg) translateX(40px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+/* ── APRESENTAÇÃO ─────────────────────────────────────── */
+.apresentacao {
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  padding: 120px 60px;
+}
+
+.apresentacao-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('sessão_apresentacao.png');
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+  transition: transform 0.05s linear;
+  transform: scale(1.1);
+}
+
+.apresentacao-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.apresentacao-conteudo {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+}
+
+.apresentacao-conteudo .label {
+  margin-bottom: 16px;
+}
+
+.apresentacao-conteudo h2 {
+  font-size: clamp(24px, 2.6vw, 40px);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.8), 0 4px 40px rgba(0,0,0,0.6);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.apresentacao-desc {
+  font-size: 18px;
+  color: #ccc;
+  line-height: 1.7;
+  margin-bottom: 40px;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.9);
+}
+
+.apresentacao-desc {
+  font-size: 18px;
+  color: #ccc;
+  line-height: 1.7;
+  margin-bottom: 40px;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.apresentacao-btns {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+
+    /* ── FOOTER ───────────────────────────────────────── */
+    footer {
+      border-top: 1px solid #1a1a1a;
+      padding: 40px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    footer img { height: 26px; opacity: 0.5; }
+    footer p { font-size: 13px; color: #444; }
+
+    /* ── ANIMAÇÕES ────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ───────────────────────────────────── */
+    @media (max-width: 480px) {
+
+     /* IMAGENS MOBILE DA TIMELINE */
+  .timeline-img {
+    height: 195px;
+  }
+
+  /* NAV */
+  nav {
+    padding: 14px 20px;
+  }
+  nav img { height: 36px; }
+  .nav-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 120px 24px 100px;
+  }
+  .hero-titulo {
+    font-size: clamp(28px, 8vw, 40px);
+    letter-spacing: 0;
+  }
+  .hero-subtitulo {
+    font-size: 15px;
+  }
+  .btn-primario, .btn-outline {
+    width: 100%;
+    text-align: center;
+    padding: 16px 24px;
+    font-size: 15px;
+  }
+  .hero-cta {
+    flex-direction: column;
+  }
+
+  /* MOCKUP DUPLO */
+  .mockup-duplo {
+    grid-template-columns: 1fr;
+    padding: 60px 24px;
+    gap: 32px;
+  }
+  .mockup-duplo::before,
+  .mockup-duplo::after {
+    display: none;
+  }
+  .mockup-duplo-texto h2 {
+    font-size: clamp(24px, 7vw, 36px);
+  }
+
+  /* FEATURES */
+  .features {
+    padding: 60px 24px;
+  }
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  .titulo-secao {
+    font-size: clamp(24px, 7vw, 36px);
+  }
+
+  /* PAINEL 3D */
+  .painel-3d-section {
+    padding: 60px 24px;
+  }
+  .painel-3d-inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .painel-3d-imagem {
+    transform: none !important;
+  }
+  .painel-3d-imagem.visivel {
+    transform: none !important;
+  }
+  .painel-3d-texto h2 {
+    font-size: clamp(24px, 7vw, 36px);
+  }
+
+  /* COMO FUNCIONA */
+  .como-funciona {
+    padding: 60px 24px;
+  }
+  .timeline {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  .timeline-linha {
+    display: none;
+  }
+  .timeline-num {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  .timeline-img {
+    height: 220px;
+  }
+  .timeline-titulo {
+    font-size: 18px;
+  }
+
+  /* APRESENTAÇÃO */
+  .apresentacao {
+    padding: 80px 24px;
+    min-height: 60vh;
+  }
+  .apresentacao-conteudo h2 {
+    font-size: clamp(22px, 7vw, 32px);
+  }
+  .apresentacao-desc {
+    font-size: 15px;
+  }
+  .apresentacao-btns {
+    flex-direction: column;
+  }
+  .apresentacao-btns a {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* CTA FINAL */
+  .cta-final {
+    padding: 80px 24px;
+  }
+  .cta-final h2 {
+    font-size: clamp(28px, 8vw, 40px);
+  }
+
+  /* FOOTER */
+  footer {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+    padding: 32px 24px;
+  }
+}
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ─────────────────────────────────────────── -->
+  <nav>
+    <img src="assets/images/logo.png" alt="Kikos">
+    <a href="index.html" class="nav-btn">Acessar o totem →</a>
+  </nav>
+
+
+  <!-- ── HERO ─────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-bg" id="hero-parallax"></div>
+    <div class="hero-gradiente"></div>
+    <div class="hero-conteudo">
+      <span class="hero-eyebrow">Sistema de Auto Atendimento</span>
+      <h1 class="hero-titulo">
+        SEU CLIENTE NÃO QUER ESPERAR.<br>
+        <em>E AGORA NÃO PRECISA.</em>
+      </h1>
+      <p class="hero-subtitulo">
+        Sem fila, sem papel, sem confusão.<br>
+        O cliente chega, escolhe e vai pro balcão.
+        Seu time foca no que importa: <em class="destaque-subtitulo">a experiência do cliente.</em>
+      </p>
+      <div class="hero-cta">
+        <a href="index.html" class="btn-primario">Ver o totem funcionando →</a>
+        <a href="#como-funciona" class="btn-outline">Como funciona</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>Role para ver</span>
+      <div class="scroll-chevron">
+        <svg width="20" height="12" viewBox="0 0 20 12" fill="none">
+          <path d="M1 1L10 10L19 1" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <svg width="20" height="12" viewBox="0 0 20 12" fill="none" style="opacity:0.3; margin-top:-4px;">
+          <path d="M1 1L10 10L19 1" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <div class="divisor"></div>
+
+  <!-- ── MOCKUP + TEXTO ─────────────────────────────────── -->
+  <div class="mockup-duplo">
+    <div class="mockup-duplo-texto">
+      <span class="label">Experiência no ponto de venda</span>
+      <h2>O CLIENTE NO CONTROLE.<br><em class="titulo-destaque">DO INÍCIO AO FIM.</em></h2>
+      <p class="desc">O totem permite que o cliente navegue pelo catálogo completo, monte o pedido e gere uma senha. Tudo sem precisar falar com ninguém antes de estar pronto.</p>
+      <a href="index.html" class="btn-primario">Acessar agora →</a>
+    </div>
+    <div class="mockup-duplo-imagem">
+      <div class="frame-9-16">
+        <img src="mock2.png" alt="Interface do totem Kikos">
+      </div>
+    </div>
+  </div>
+
+  <div class="divisor"></div>
+
+  <!-- ── FEATURES COM FUNDO ─────────────────────────────── -->
+  <div class="features-wrapper">
+    <div class="features-bg"></div>
+    <div class="features-overlay"></div>
+    <section class="features">
+      <div class="features-header">
+        <span class="label">Recursos</span>
+        <h2 class="titulo-secao">TUDO QUE A LOJA PRECISA,<br><em class="titulo-destaque">SEM COMPLICAÇÃO.</em></h2>
+        <p class="desc-secao">Desenvolvido para o fluxo de vendas Kikos. Do catálogo ao balcão.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          <div class="feature-titulo">CATÁLOGO COMPLETO</div>
+          <div class="feature-texto">Todos os equipamentos organizados por categoria, com fotos, preços e descontos em destaque.</div>
+        </div>
+        <div class="feature-card feature-card-vermelho">
+          <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <div class="feature-titulo">BUSCA INTELIGENTE</div>
+          <div class="feature-texto">O cliente encontra qualquer produto digitando o nome ou navegando pelas categorias com um toque.</div>
+        </div>
+        <div class="feature-card">
+          <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+          </svg>
+          <div class="feature-titulo">INTERFACE TOUCHSCREEN</div>
+          <div class="feature-texto">Projetado para tela de toque em totem 1080×1920 — botões grandes, navegação intuitiva.</div>
+        </div>
+        <div class="feature-card feature-card-vermelho">
+          <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+          <div class="feature-titulo">PAINEL EM TEMPO REAL</div>
+          <div class="feature-texto">O atendente vê cada pedido aparecer na tela assim que o cliente confirma — instantâneo.</div>
+        </div>
+        <div class="feature-card">
+          <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+          </svg>
+          <div class="feature-titulo">CHAMADA DE ATENDENTE</div>
+          <div class="feature-texto">Se precisar de ajuda, um botão no totem notifica o balcão imediatamente com alerta visual.</div>
+        </div>
+        <div class="feature-card feature-card-vermelho">
+          <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <div class="feature-titulo">GESTÃO POR STATUS</div>
+          <div class="feature-texto">Pedidos fluem de Aguardando → Em atendimento → Concluído com um clique, sem papel.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="divisor"></div>
+
+  <!-- ── PAINEL 3D ──────────────────────────────────────── -->
+  <section class="painel-3d-section">
+    <div class="painel-3d-inner">
+      <div class="painel-3d-texto">
+        <span class="label">Painel do atendente</span>
+        <h2>TUDO SOB CONTROLE.<br><em class="titulo-destaque">EM TEMPO REAL.</em></h2>
+        <p>Cada pedido feito no totem aparece instantaneamente no painel do atendente, com senha, itens e valor total.</p>
+        <p>Um clique move o pedido de <strong style="color:#fff;">Aguardando</strong> para <strong style="color:#fff;">Concluído</strong>. Sem papel, sem confusão, sem perder cliente.</p>
+        <a href="index.html" class="btn-primario" style="display:inline-block; margin-top:24px;">Acessar o totem →</a>
+      </div>
+      <div class="painel-3d-wrapper">
+        <div class="painel-glow"></div>
+        <div class="painel-3d-imagem" id="painel-3d">
+          <div class="frame-16-9">
+            <img src="painel.png" alt="Painel do atendente Kikos">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divisor"></div>
+
+  <!-- ── COMO FUNCIONA ─────────────────────────────────── -->
+  <section class="como-funciona" id="como-funciona">
+    <div class="como-funciona-bg" id="como-funciona-parallax"></div>
+    <div class="como-funciona-overlay"></div>
+    <div class="como-funciona-inner">
+      <div class="como-funciona-header">
+        <span class="label">Passo a passo</span>
+        <h2 class="titulo-secao">COMO FUNCIONA<br><em class="titulo-destaque">NA PRÁTICA.</em></h2>
+        <p class="como-funciona-desc">Do standby à entrega do pedido no balcão.</p>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-linha"></div>
+
+        <div class="timeline-card" data-delay="0">
+          <div class="timeline-num">1</div>
+          <div class="timeline-img">
+            <img src="splash_screen_passo.png" alt="Splash screen">
+          </div>
+          <div class="timeline-eyebrow">Standby</div>
+          <h3 class="timeline-titulo">O TOTEM AGUARDA.<br><em class="titulo-destaque">O CLIENTE CHEGA.</em></h3>
+          <p class="timeline-desc">O totem fica em standby com a logo Kikos em destaque. Um toque na tela inicia o atendimento. Sem login, sem cadastro, sem espera.</p>
+        </div>
+
+        <div class="timeline-card" data-delay="150">
+          <div class="timeline-num">2</div>
+          <div class="timeline-img">
+            <img src="mock3.png" alt="Catálogo">
+          </div>
+          <div class="timeline-eyebrow">Catálogo</div>
+          <h3 class="timeline-titulo">CATÁLOGO NA<br><em class="titulo-destaque">PONTA DOS DEDOS.</em></h3>
+          <p class="timeline-desc">O cliente navega pelas categorias, vê fotos e preços, e adiciona os equipamentos ao carrinho com um toque. Rápido e intuitivo.</p>
+        </div>
+
+        <div class="timeline-card" data-delay="300">
+          <div class="timeline-num">3</div>
+          <div class="timeline-img">
+            <img src="senha_passo.png" alt="Senha">
+          </div>
+          <div class="timeline-eyebrow">Confirmação</div>
+          <h3 class="timeline-titulo">UM TOQUE.<br><em class="titulo-destaque">UMA SENHA.</em></h3>
+          <p class="timeline-desc">Ao confirmar o pedido, o sistema gera uma senha única. O cliente vai ao balcão e aguarda ser chamado. Sem papel, sem confusão.</p>
+        </div>
+
+        <div class="timeline-card" data-delay="450">
+          <div class="timeline-num">4</div>
+          <div class="timeline-img">
+            <img src="painel_passo.png" alt="Painel">
+          </div>
+          <div class="timeline-eyebrow">Atendimento</div>
+          <h3 class="timeline-titulo">O ATENDENTE<br><em class="titulo-destaque">JÁ SABE O QUE VEM.</em></h3>
+          <p class="timeline-desc">O painel mostra cada pedido em tempo real com senha, itens e total. Um clique move de Aguardando para Concluído.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="divisor"></div>
+
+  <!-- ── APRESENTAÇÃO ──────────────────────────────────── -->
+  <section class="apresentacao">
+    <div class="apresentacao-bg" id="apresentacao-parallax"></div>
+    <div class="apresentacao-overlay"></div>
+    <div class="apresentacao-conteudo">
+      <span class="label">Na loja, funcionando</span>
+      <h2>JÁ EM OPERAÇÃO.<br><em class="titulo-destaque">PRONTO PARA APRESENTAR.</em></h2>
+      <p class="apresentacao-desc">O sistema está rodando e pode ser apresentado ao time agora mesmo. Acesse o totem e o painel do atendente com um clique.</p>
+      <div class="apresentacao-btns">
+        <a href="index.html" class="btn-primario">Ver o totem →</a>
+        <a href="painel.html" class="btn-outline">Ver o painel</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="divisor"></div>
+
+  <!-- ── CTA FINAL ─────────────────────────────────────── -->
+  <section class="cta-final">
+    <div class="cta-bg"></div>
+    <div class="cta-overlay"></div>
+    <h2>Experiência moderna.<br><em style="font-style:normal; color:var(--vermelho);">Resultado imediato.</em></h2>
+    <p>O sistema está pronto. Acesse agora e veja na prática.</p>
+    <a href="index.html" class="btn-primario">Acessar o totem →</a>
+  </section>
+
+  <!-- ── FOOTER ────────────────────────────────────────── -->
+  <div class="divisor"></div>
+  <footer>
+    <img src="assets/images/logo.png" alt="Kikos">
+    <p>Desenvolvido por Lumno Agência de Marketing LTDA — 2026</p>
+  </footer>
+
+  <script>
+    // ── PARALLAX ────────────────────────────────────────
+   const heroBg = document.getElementById('hero-parallax');
+const comoFuncionaBg = document.getElementById('como-funciona-parallax');
+const apresentacaoBg = document.getElementById('apresentacao-parallax');
+
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  heroBg.style.transform = `translateY(${scrollY * 0.4}px)`;
+
+  if (comoFuncionaBg) {
+    const secao = comoFuncionaBg.closest('section');
+    const offset = secao.getBoundingClientRect().top + scrollY;
+    const relativo = scrollY - offset;
+    comoFuncionaBg.style.transform = `translateY(${relativo * 0.3}px)`;
+  }
+
+  if (apresentacaoBg) {
+    const secao = apresentacaoBg.closest('section');
+    const rect = secao.getBoundingClientRect();
+    const progresso = 1 - Math.max(0, Math.min(1, rect.top / window.innerHeight));
+    const escala = 1.15 - progresso * 0.15;
+    apresentacaoBg.style.transform = `scale(${escala})`;
+  }
+});
+
+    // ── SCROLL REVEAL ───────────────────────────────────
+    const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visivel'), entry.target.dataset.delay || 0);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.05, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.feature-card').forEach((el, i) => {
+      el.dataset.delay = (i % 3) * 100;
+      observer.observe(el);
+    });
+
+    document.querySelectorAll('.timeline-card').forEach((el, i) => {
+  el.dataset.delay = parseInt(el.dataset.delay) || 0;
+  observer.observe(el);
+});
+
+    const painel3d = document.getElementById('painel-3d');
+    if (painel3d) observer.observe(painel3d);
+
+    // ── ACCORDION ───────────────────────────────────────
+    const passos = document.querySelectorAll('.passo-item');
+
+    function abrirPasso(index) {
+      passos.forEach((p, i) => {
+        if (i === index) {
+          p.classList.add('ativo');
+        } else {
+          p.classList.remove('ativo');
+        }
+      });
+    }
+
+    passos.forEach((passo, index) => {
+      passo.querySelector('.passo-header').addEventListener('click', () => {
+        const jaAberto = passo.classList.contains('ativo');
+        if (jaAberto) {
+          passo.classList.remove('ativo');
+        } else {
+          abrirPasso(index);
+        }
+      });
+    });
+
+    // Abre o primeiro por padrão após um delay
+    setTimeout(() => abrirPasso(0), 800);
+
+    // ── IMAGENS MOBILE ──────────────────────────────────
+if (window.innerWidth <= 480) {
+  const imgsMobile = [
+    { indice: 1, src: 'splash_screen_passo_mobile.png' },
+    { indice: 2, src: 'mock3_mobile.png' },
+    { indice: 3, src: 'senha_mobile.png' },
+    { indice: 4, src: 'painel_mobile.png' }
+  ];
+
+  const cards = document.querySelectorAll('.timeline-card');
+  imgsMobile.forEach(({ indice, src }) => {
+    const img = cards[indice - 1]?.querySelector('.timeline-img img');
+    if (img) img.src = src;
+  });
+}
+
+  </script>
+
+</body>
+</html>

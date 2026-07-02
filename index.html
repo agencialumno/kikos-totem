@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kikos - Totem de Autoatendimento</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="splash-screen" id="splash-screen">
+  <img src="assets/images/logo.png" alt="Kikos" class="splash-logo">
+  <p class="splash-texto">Toque na tela para começar</p>
+</div>
+
+  <!-- Cabeçalho -->
+  <header class="header">
+    <img src="assets/images/logo.png" alt="Kikos" class="logo">
+  <button class="btn-ajuda">Chamar atendente</button>
+  </header>
+
+  <!-- Banner de boas-vindas -->
+  <section class="banner">
+    <div class="banner-texto">
+      <span class="banner-destaque">Bem-vindo!</span>
+      <h1>Escolha os equipamentos que você deseja.</h1>
+      <p>Seu pedido será enviado para um atendente que irá separá-lo para você.</p>
+    </div>
+  </section>
+
+  <!-- Conteúdo principal -->
+  <main class="conteudo">
+
+    <!-- Barra de busca -->
+    <div class="busca-container">
+      <input type="text" class="busca-input" placeholder="Busque por equipamentos, categorias ou modelos">
+      <button class="btn-ver-todos">Ver todos</button>
+    </div>
+
+    <div class="grid-principal">
+
+      <!-- Categorias -->
+      <aside class="categorias">
+        <h3>Categorias</h3>
+       <ul id="lista-categorias">
+
+          <li class="ativo" data-categoria="Esteiras">
+            <img src="assets/images/esteira.png" width="50" height="50" alt="Esteiras">
+            Esteiras
+          </li>
+
+          <li data-categoria="Bikes">
+            <img src="assets/images/bike.png" width="50" height="50" alt="Bikes">
+            Bikes
+          </li>
+
+          <li data-categoria="Elípticos">
+            <img src="assets/images/eliptico.png" width="60" height="60" alt="Elípticos">
+            Elípticos
+          </li>
+
+          <li data-categoria="Escadas">
+            <img src="assets/images/escada.png" width="60" height="60" alt="Escadas">
+            Escadas
+          </li>
+
+          <li data-categoria="Multifuncionais">
+            <img src="assets/images/multi.png" width="64" height="64" alt="Multifuncionais">
+            Multifuncionais
+          </li>
+
+          <li data-categoria="Musculação">
+            <img src="assets/images/musc.png" width="50" height="50" alt="Musculação">
+            Musculação
+          </li>
+
+          <li data-categoria="Plataformas e Remos">
+            <img src="assets/images/plata.png" width="50" height="50" alt="Plataformas">
+            Plataformas e Remos
+          </li>
+
+          <li data-categoria="Bancos">
+            <img src="assets/images/banco.png" width="68" height="68" alt="Bancos">
+            Bancos
+          </li>
+
+          <li data-categoria="Pesos Livres">
+            <img src="assets/images/peso_livre.png" width="50" height="50" alt="Pesos Livres">
+            Pesos Livres
+          </li>
+
+          <li data-categoria="Acessórios">
+            <img src="assets/images/colchonete.png" width="50" height="50" alt="Acessórios">
+            Acessórios
+          </li>
+
+          <li data-categoria="Promoções">
+            <img src="assets/images/promocao.png" width="50" height="50" alt="Promoções">
+            Promoções
+          </li>
+
+        </ul>
+      </aside>
+
+      <!-- Coluna direita: produtos + carrinho -->
+      <div class="coluna-direita">
+
+        <!-- Produtos -->
+        <section class="produtos">
+          <h2 id="titulo-categoria">Esteiras</h2>
+          <div class="grid-produtos" id="grid-produtos">
+            <!-- Produtos serão inseridos aqui via JavaScript -->
+          </div>
+          <div class="paginacao" id="paginacao"></div>
+        </section>
+
+        <!-- Carrinho -->
+        <aside class="carrinho">
+          <h3>Meu pedido (<span id="contador-itens">0</span>)</h3>
+          <div id="lista-carrinho">
+            <p class="carrinho-vazio">Seu carrinho está vazio</p>
+          </div>
+          <div class="carrinho-total">
+            <span>Total</span>
+            <strong id="total-pedido">R$ 0,00</strong>
+          </div>
+          <button class="btn-enviar-pedido">Enviar pedido para o atendente</button>
+        </aside>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/produtos.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
