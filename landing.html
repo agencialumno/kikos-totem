@@ -389,6 +389,20 @@ nav {
   z-index: 1;
     }
 
+    .painel-3d-btns {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+.painel-3d-btns {
+  flex-direction: column;
+}
+.painel-3d-btns a {
+  width: 100%;
+  text-align: center;
+}
+
     .painel-3d-imagem.visivel {
       opacity: 1;
       transform: perspective(1000px) rotateY(-8deg) rotateX(3deg) translateX(0);
@@ -1013,7 +1027,10 @@ nav {
         <h2>TUDO SOB CONTROLE.<br><em class="titulo-destaque">EM TEMPO REAL.</em></h2>
         <p>Cada pedido feito no totem aparece instantaneamente no painel do atendente, com senha, itens e valor total.</p>
         <p>Um clique move o pedido de <strong style="color:#fff;">Aguardando</strong> para <strong style="color:#fff;">Concluído</strong>. Sem papel, sem confusão, sem perder cliente.</p>
-        <a href="index.html" class="btn-primario" style="display:inline-block; margin-top:24px;">Acessar o totem →</a>
+<div class="painel-3d-btns">
+  <a href="index.html" class="btn-primario">Acessar o totem →</a>
+  <a href="painel.html" class="btn-outline">Acessar o painel →</a>
+</div>
       </div>
       <div class="painel-3d-wrapper">
         <div class="painel-glow"></div>

@@ -18,6 +18,7 @@ body {
   background-color: var(--cor-fundo);
   color: var(--cor-escura);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 /* Header */
@@ -31,9 +32,15 @@ body {
 
 .logo { height: 60px; }
 
+.painel-titulo {
+  min-width: 0;
+  flex: 1;
+}
+
 .painel-titulo h1 {
   color: var(--cor-branca);
   font-size: 28px;
+  overflow-wrap: break-word;
 }
 
 .painel-titulo span {
@@ -201,18 +208,20 @@ body {
 
 @media (max-width: 480px) {
   .painel-header {
-    padding: 16px 20px;
-    gap: 12px;
+    padding: 12px 16px;
+    gap: 8px;
+    flex-wrap: wrap;
   }
 
-  .logo { height: 40px; }
+  .logo { height: 32px; }
 
   .painel-titulo h1 {
-    font-size: 18px;
+    font-size: 16px;
+    line-height: 1.2;
   }
 
   .painel-titulo span {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .painel-conteudo {
