@@ -242,7 +242,7 @@ body {
 .produto-vista {
   font-size: 14px;
   color: #555;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
 }
 
 .btn-add {
@@ -255,7 +255,8 @@ body {
   cursor: pointer;
   font-size: 18px;
   font-weight: bold;
-  margin-top: 16px;
+  margin-top: 8px;
+  display: block;
 }
 
 /* Carrinho */
@@ -597,4 +598,143 @@ body {
   .modal-senha p {
     font-size: 16px;
   }
+}
+
+/* ── MODAL QUANTIDADE ─────────────────────────────── */
+.overlay-quantidade {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-quantidade {
+  background: var(--cor-branca);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 480px;
+  width: 90%;
+  text-align: center;
+}
+
+.modal-quantidade img {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  margin-bottom: 16px;
+}
+
+.modal-quantidade h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--cor-escura);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.modal-preco {
+  font-size: 18px;
+  color: var(--cor-destaque);
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.modal-quantidade-controle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.modal-quantidade-controle button {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid var(--cor-escura);
+  background: transparent;
+  font-size: 28px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--cor-escura);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.modal-quantidade-controle button:hover {
+  background: var(--cor-fundo);
+}
+
+.modal-quantidade-controle input {
+  width: 80px;
+  height: 52px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  color: var(--cor-escura);
+}
+
+.modal-quantidade-btns {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-cancelar-modal {
+  flex: 1;
+  padding: 16px;
+  border-radius: 8px;
+  border: 2px solid #ccc;
+  background: transparent;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #888;
+}
+
+.btn-confirmar-modal {
+  flex: 2;
+  padding: 16px;
+  border-radius: 8px;
+  border: none;
+  background: var(--cor-destaque);
+  color: var(--cor-branca);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(229,35,34,0.4);
+}
+
+/* ── TOAST ────────────────────────────────────────── */
+.toast-sucesso {
+  position: fixed;
+  bottom: 40px;
+  left: 16px;
+  right: 16px;
+  text-align: center;
+  background: var(--cor-escura);
+  color: var(--cor-branca);
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 9998;
+  border-left: 4px solid var(--cor-destaque);
+  transform: translateY(20px);
+}
+
+.toast-sucesso.visivel {
+  opacity: 1;
+  transform: translateY(0);
 }

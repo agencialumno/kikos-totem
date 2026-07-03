@@ -53,13 +53,66 @@ function mudarPagina(direcao) {
 
 function adicionarAoCarrinho(id) {
   const produto = produtos.find(p => p.id === id);
-  const existente = carrinho.find(i => i.id === id);
-  if (existente) {
-    existente.quantidade++;
-  } else {
-    carrinho.push({ ...produto, quantidade: 1 });
+  mostrarModalQuantidade(produto);
+}
+
+function mostrarModalQuantidade(produto) {
+  const overlay = document.createElement("div");
+  overlay.className = "overlay-quantidade";
+  overlay.innerHTML = `
+    <div class="modal-quantidade">
+      <img src="${produto.foto}" alt="${produto.nome}" onerror="this.style.display='none'">
+      <h3>${produto.nome}</h3>
+      <p class="modal-preco">por ${formatarMoeda(produto.precoVista)} à vista</p>
+      <div class="modal-quantidade-controle">
+        <button onclick="alterarQuantidade(-1)">−</button>
+        <input type="number" id="input-quantidade" value="1" min="1" max="99">
+        <button onclick="alterarQuantidade(1)">+</button>
+      </div>
+      <div class="modal-quantidade-btns">
+        <button class="btn-cancelar-modal" onclick="this.closest('.overlay-quantidade').remove()">Cancelar</button>
+        <button class="btn-confirmar-modal" onclick="confirmarAdicao(${produto.id})">Adicionar ao pedido</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+function alterarQuantidade(delta) {
+  const input = document.getElementById("input-quantidade");
+  const novoValor = parseInt(input.value) + delta;
+  if (novoValor >= 1 && novoValor <= 99) {
+    input.value = novoValor;
   }
+}
+
+function confirmarAdicao(id) {
+  const produto = produtos.find(p => p.id === id);
+  const quantidade = parseInt(document.getElementById("input-quantidade").value) || 1;
+  const existente = carrinho.find(i => i.id === id);
+
+  if (existente) {
+    existente.quantidade += quantidade;
+  } else {
+    carrinho.push({ ...produto, quantidade });
+  }
+
+  document.querySelector(".overlay-quantidade").remove();
   renderizarCarrinho();
+  mostrarToast(`${quantidade}x ${produto.nome} adicionado!`);
+}
+
+function mostrarToast(mensagem) {
+  const toast = document.createElement("div");
+  toast.className = "toast-sucesso";
+  toast.innerHTML = `✓ ${mensagem}`;
+  document.body.appendChild(toast);
+
+  setTimeout(() => toast.classList.add("visivel"), 10);
+  setTimeout(() => {
+    toast.classList.remove("visivel");
+    setTimeout(() => toast.remove(), 400);
+  }, 2500);
 }
 
 function removerDoCarrinho(id) {
@@ -155,7 +208,6 @@ function gerarCardHTML(p) {
         <p class="produto-parcelas">em até <strong>${p.parcelas}</strong> sem juros</p>
         <p class="produto-original">ou de <span>${formatarMoeda(p.precoOriginal)}</span></p>
         <p class="produto-vista">por ${formatarMoeda(p.precoVista)} à vista</p>
-      </div>
       </div>
       <button class="btn-add" onclick="adicionarAoCarrinho(${p.id})">Adicionar</button>
     </div>
